@@ -14,30 +14,27 @@ def main():
 
     # Part two
     slope1 = countTrees(map, 1, 1)
-    print(f"Slope 1: {slope1} trees")
+    #print(f"Slope 1: {slope1} trees")
     slope2 = treeCountOne
-    print(f"Slope 2: {slope2} trees")
+    #print(f"Slope 2: {slope2} trees")
     slope3 = countTrees(map, 5, 1)
-    print(f"Slope 3: {slope3} trees")
+    #print(f"Slope 3: {slope3} trees")
     slope4 = countTrees(map, 7, 1)
-    print(f"Slope 4: {slope4} trees")
+    #print(f"Slope 4: {slope4} trees")
     slope5 = countTrees(map, 1, 2)
-    print(f"Slope 5: {slope5} trees")
+    #print(f"Slope 5: {slope5} trees")
     product = slope1 * slope2 * slope3 * slope4 * slope5
     print("Part Two product: " + str(product))
-    # I get 5,191,884,940 which is apparently too big
-    # (82, 242, 71, 67, 55)
 
 
+# Had to adjust step on the range because the math for rows was incorrect
 def countTrees(map, right, down):
     # The map repeats to the right
     treeCount = 0
     col = 0
     height = len(map)
-    for row in range(0, height):
-        if row + down >= len(map):
-            break
-        line = map[row + down]
+    for row in range(0 + down, height, down):
+        line = map[row]
         col += right
         if isTree(col, line):
             treeCount += 1
