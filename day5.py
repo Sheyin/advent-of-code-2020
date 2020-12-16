@@ -15,22 +15,45 @@ def main():
         boarding_passes.append(line)
     # boarding_passes should now be a tidy array of data
 
-    highest_seat_pid = 0
+    highest_seat_id = 0
+    all_seat_info = []
     for boarding_pass in boarding_passes:
         seat_info = {}
-        seat = locateSeat(boarding_pass)
+        seat = findSeatID(boarding_pass)
         seat_info["row"] = seat[0]
         seat_info["col"] = seat[1]
-        seat_info["pid"] = (seat[0] * 8) + seat[1]
+        seat_info["id"] = (seat[0] * 8) + seat[1]
         seat_info["pattern"] = boarding_pass
-        if seat_info["pid"] > highest_seat_pid:
-            highest_seat_pid = seat_info["pid"]
-    print(f"Part One: Highest Seat PID is: {highest_seat_pid}")
+        if seat_info["id"] > highest_seat_id:
+            highest_seat_id = seat_info["id"]
+        all_seat_info.append(seat_info)
+    print(f"Part One: Highest Seat ID is: {highest_seat_id}")
+    missing_seat = locateSeat(all_seat_info, highest_seat_id)
+    print(f"Part Two: The missing Seat ID is: {missing_seat}")
+
+
+# Part two - find a seat for which a seat id exists before and after (+/- 1)
+# Return the seat id
+def locateSeat(seat_info, highest_seat_id):
+    for id in range(0, highest_seat_id):
+        # If a boarding pass w/ this ID exists, it can't be the seat
+        if not findSeatId(id, seat_info):
+            if (findSeatId(id - 1, seat_info) and findSeatId(id + 1, seat_info)):
+                return id
+    return "Failed to find the seat!"
+
+
+# return True if the requested seat # is found, False otherwise
+def findSeatId(id, seat_info):
+    for seat in seat_info:
+        if id == seat["id"]:
+            return True
+    return False
 
 
 # Calculates the seat's row/col position based on rules.
 # Return a tuple (row, column)
-def locateSeat(boarding_pass):
+def findSeatID(boarding_pass):
     row_pattern = boarding_pass[:-3]
     col_pattern = boarding_pass[-3:]
     row_range = (0, 127)
